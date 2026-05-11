@@ -271,64 +271,80 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 1000, once: true });
+<script>
+    AOS.init({ duration: 1000, once: true });
 
-        // Configuración de Datos Reales
-        const TMDB_KEY = '51800c8d9e13631a7ded6f17f363e7a5';
-        const BLOG_FEED = 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json&max-results=10';
+    const CONFIG = {
+        TMDB_KEY: '51800c8d9e13631a7ded6f17f363e7a5',
+        // Usamos el feed en formato script para evitar bloqueos CORS
+        BLOG_FEED: 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderMovies&max-results=10'
+    };
 
-        async function loadMovies() {
-            const track = document.getElementById('poster-track');
-            try {
-                const response = await fetch(BLOG_FEED);
-                const data = await response.json();
-                const entries = data.feed.entry;
+    // Esta función se ejecutará automáticamente cuando Blogger responda
+    window.renderMovies = async function(data) {
+        const track = document.getElementById('poster-track');
+        const entries = data.feed.entry;
+        
+        if (!entries) {
+            track.innerHTML = "<p>No hay publicaciones recientes.</p>";
+            return;
+        }
 
-                track.innerHTML = ''; // Limpiar
+        track.innerHTML = ''; // Limpiamos el texto de carga
 
-                for (let entry of entries) {
-                    const content = entry.content ? entry.content.$t : entry.summary.$t;
-                    // Intenta extraer ID de TMDB del contenido del post de Blogger
-                    const tmdbMatch = content.match(/tmdb\.org\/(movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
-                    
-                    let imgUrl = "";
+        for (let entry of entries) {
+            let imgUrl = "";
+            let title = entry.title.$t;
+            
+            // 1. Intentamos obtener la imagen de TMDB buscando el ID en el contenido
+            const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
+            const tmdbMatch = content.match(/tmdb\.org\/(movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
 
-                    if (tmdbMatch && tmdbMatch[2]) {
-                        const type = tmdbMatch[1] || 'movie';
-                        const id = tmdbMatch[2];
-                        const tmdbRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${TMDB_KEY}&language=es-ES`);
-                        const tmdbData = await tmdbRes.json();
-                        imgUrl = `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`;
-                    } else if (entry.media$thumbnail) {
-                        imgUrl = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
-                    }
+            if (tmdbMatch && tmdbMatch[2]) {
+                try {
+                    const type = tmdbMatch[1] || 'movie';
+                    const id = tmdbMatch[2];
+                    const tmdbRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${CONFIG.TMDB_KEY}&language=es-ES`);
+                    const tmdbData = await tmdbRes.json();
+                    if(tmdbData.poster_path) imgUrl = `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`;
+                } catch(e) { console.error("Error TMDB", e); }
+            }
 
-                    if (imgUrl) {
-                        const card = document.createElement('div');
-                        card.className = 'poster-card';
-                        card.innerHTML = `<img src="${imgUrl}" alt="Movie">`;
-                        track.appendChild(card);
-                    }
-                }
+            // 2. Si lo anterior falla, usamos la miniatura de Blogger
+            if (!imgUrl && entry.media$thumbnail) {
+                imgUrl = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
+            }
 
-                // Duplicar para efecto infinito
-                track.innerHTML += track.innerHTML;
-
-            } catch (e) {
-                console.error("Error cargando feed:", e);
-                track.innerHTML = "<p>Cartelera lista. Disfruta de la app.</p>";
+            if (imgUrl) {
+                const card = document.createElement('div');
+                card.className = 'poster-card';
+                card.innerHTML = `<img src="${imgUrl}" alt="${title}" title="${title}">`;
+                track.appendChild(card);
             }
         }
 
-        // Contador simulado
-        let num = 15420;
-        setInterval(() => {
-            num += Math.floor(Math.random() * 2);
-            document.getElementById('count').innerText = num.toLocaleString() + "+";
-        }, 4000);
+        // Duplicar para el efecto de scroll infinito
+        if (track.children.length > 0) {
+            track.innerHTML += track.innerHTML;
+        }
+    };
 
-        loadMovies();
-    </script>
+    // Cargamos el feed de Blogger como un elemento de script para saltar CORS
+    function initGallery() {
+        const script = document.createElement('script');
+        script.src = CONFIG.BLOG_FEED;
+        document.body.appendChild(script);
+    }
+
+    // Contador simulado
+    let num = 15421;
+    setInterval(() => {
+        num += Math.floor(Math.random() * 2);
+        const el = document.getElementById('count');
+        if(el) el.innerText = num.toLocaleString() + "+";
+    }, 4000);
+
+    window.onload = initGallery;
+</script>
 </body>
 </html>
