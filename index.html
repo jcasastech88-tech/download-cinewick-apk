@@ -158,7 +158,92 @@
             <i class="fas fa-laptop" title="PC (con emulador)"></i>
         </div>
     </section>
+<!-- SECCIÓN DE TENDENCIAS (CARRUSEL VISUAL) -->
+    <style>
+        .trending-row {
+            overflow: hidden;
+            padding: 40px 0;
+            background: #000;
+        }
+        .poster-track {
+            display: flex;
+            width: calc(250px * 10);
+            animation: scroll 40s linear infinite;
+            gap: 15px;
+        }
+        .poster-track img {
+            width: 180px;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .poster-track img:hover { transform: scale(1.1); }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-250px * 5)); }
+        }
 
+        /* FAQ Estilo Moderno */
+        .faq-section { padding: 80px 20px; max-width: 800px; margin: auto; }
+        details {
+            background: #1a1a1a;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border-left: 4px solid var(--primary);
+        }
+        details summary { font-weight: bold; font-size: 1.1rem; outline: none; }
+        details p { margin-top: 10px; color: #b3b3b3; }
+
+        footer {
+            padding: 50px 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+
+    <section class="trending-row">
+        <h2 style="text-align: center; margin-bottom: 30px;">Contenido Actualizado</h2>
+        <div class="poster-track">
+            <!-- Reemplaza con posters reales si quieres -->
+            <img src="https://image.tmdb.org/t/p/w500/q719jXXLsVp68uUuC38pS7m9m6X.jpg" alt="Peli">
+            <img src="https://image.tmdb.org/t/p/w500/uDsvTUfH198jIwiPoS8pZpX9ipq.jpg" alt="Peli">
+            <img src="https://image.tmdb.org/t/p/w500/p691zZpW6S6xy9kiORxYv5t6rDa.jpg" alt="Peli">
+            <img src="https://image.tmdb.org/t/p/w500/8GxvUfkYZWS9u2Tce0S661vunub.jpg" alt="Peli">
+            <img src="https://image.tmdb.org/t/p/w500/ui4DrH1cKq2vkHkvzlsSaz6G3Safe.jpg" alt="Peli">
+            <!-- Repetir para el efecto infinito -->
+            <img src="https://image.tmdb.org/t/p/w500/q719jXXLsVp68uUuC38pS7m9m6X.jpg" alt="Peli">
+            <img src="https://image.tmdb.org/t/p/w500/uDsvTUfH198jIwiPoS8pZpX9ipq.jpg" alt="Peli">
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <h2 style="text-align: center;">Preguntas Frecuentes</h2>
+        <details>
+            <summary>¿Es Cinewick realmente gratuito?</summary>
+            <p>Sí, Cinewick es y será gratuito. No necesitas tarjetas de crédito ni suscripciones mensuales.</p>
+        </details>
+        <details>
+            <summary>¿Cómo instalo la APK en mi Smart TV?</summary>
+            <p>Puedes usar la app "Send Files to TV" o copiar la APK en un USB y conectarlo a tu Android TV o TV Box.</p>
+        </details>
+        <details>
+            <summary>¿Es seguro descargar la APK desde aquí?</summary>
+            <p>Absolutamente. Nuestra APK está libre de malware y es verificada por cada actualización.</p>
+        </details>
+    </section>
+
+    <footer>
+        <div style="margin-bottom: 20px;">
+            <a href="#" style="color:white; margin: 0 10px; text-decoration: none;"><i class="fab fa-telegram"></i> Telegram</a>
+            <a href="#" style="color:white; margin: 0 10px; text-decoration: none;"><i class="fab fa-instagram"></i> Instagram</a>
+        </div>
+        <p>&copy; 2026 Cinewick App - Todos los derechos reservados.</p>
+        <p style="font-size: 0.7rem;">Cinewick no aloja ningún video en sus servidores, solo comparte enlaces encontrados en la web.</p>
+    </footer>
     <!-- Scripts de animación -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
