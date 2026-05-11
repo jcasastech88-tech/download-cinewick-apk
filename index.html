@@ -23,38 +23,44 @@
             overflow-x: hidden;
         }
 
-        /* NAVBAR */
+        /* NAVBAR - Corrección de visibilidad */
         nav {
             position: fixed;
-            top: 0; width: 100%; padding: 20px 5%;
-            z-index: 1000;
+            top: 0; width: 100%; padding: 25px 5%;
+            z-index: 2000; /* Prioridad máxima */
             display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
         }
         .nav-logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); text-decoration: none; }
+        .nav-link { 
+            color: white; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: bold; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2001;
+        }
 
-        /* HERO CON BACKGROUND RESTAURADO */
+        /* HERO */
         .hero {
             position: relative;
             height: 100vh;
             display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
         }
 
-        /* Esta es la parte que faltaba: el Background */
         .hero-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/76c5a455-c62c-46d4-8653-3924728113e3/web/AR-es-20260504-TRIFECTA-perspective_1ac5b690-1221-478e-bb49-c2e0abc5c2a9_large.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.3) blur(5px); /* Oscurecido y desenfocado */
+            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/7502c389-42e1-452f-981d-cf2c2e6b22c0/604870f2-5369-4e08-9d9e-c85e25a2e6f4/ES-es-20230206-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+            background-size: cover; background-position: center;
+            filter: brightness(0.3) blur(5px);
             z-index: 1;
         }
 
         .main-card {
             position: relative;
-            z-index: 10; /* Por encima del fondo */
+            z-index: 10;
             background-color: var(--glass);
             backdrop-filter: blur(10px);
             padding: 50px 40px;
@@ -80,11 +86,8 @@
             display: flex; align-items: center; justify-content: center; gap: 12px;
             transition: 0.3s;
             margin-bottom: 35px;
-            font-size: 1.1rem;
         }
-        .btn-download:hover { background: #b9090b; transform: translateY(-3px); }
 
-        /* STATS */
         .stats-row {
             display: flex; justify-content: space-around;
             border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;
@@ -93,16 +96,25 @@
         .stat-box span { font-weight: 800; font-size: 1rem; display: block; }
         .stat-box p { font-size: 0.7rem; color: #888; margin: 0; text-transform: uppercase; }
 
-        /* POSTS RANKING NETFLIX */
-        .trending { padding: 80px 0; background: #000; }
+        /* CARRUSEL - Corrección de desplazamiento */
+        .trending { padding: 80px 0; background: #000; overflow: hidden; }
         .trending h2 { text-align: center; margin-bottom: 50px; font-weight: 300; }
         
         .poster-container {
-            width: 100%; overflow-x: auto; padding: 20px 5% 80px 10%;
+            width: 100%; 
+            overflow-x: auto; 
+            padding: 20px 0 80px 15%; /* Padding izquierdo para centrar inicio */
             scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
         }
         .poster-container::-webkit-scrollbar { display: none; }
-        .poster-track { display: flex; gap: 60px; width: max-content; }
+
+        .poster-track { 
+            display: flex; 
+            gap: 70px; 
+            width: max-content; 
+            padding-right: 15%; /* ESPACIO FINAL para poder ver el 6to poster */
+        }
 
         .poster-link {
             position: relative; width: 180px; height: 260px;
@@ -113,7 +125,6 @@
             border-radius: 6px; position: relative; z-index: 1;
         }
 
-        /* NÚMEROS ADELANTE */
         .poster-link::before {
             content: attr(data-rank);
             position: absolute; bottom: -30px; left: -65px;
@@ -123,47 +134,30 @@
             line-height: 1; pointer-events: none;
         }
 
-        .poster-link:hover { transform: scale(1.05); }
-        .poster-link:hover::before { -webkit-text-stroke: 2px var(--primary); }
-
         footer { padding: 40px; text-align: center; background: #000; border-top: 1px solid #111; }
-        .social a { color: #fff; margin: 0 10px; font-size: 1.2rem; opacity: 0.7; }
     </style>
 </head>
 <body>
 
     <nav>
         <a href="#" class="nav-logo">CINEWICK</a>
-        <a href="https://cinewick-vip.blogspot.com/" style="color:white; text-decoration:none; font-size:0.8rem; font-weight:bold;">WEB OFICIAL</a>
+        <a href="https://cinewick-vip.blogspot.com/" class="nav-link">Web Oficial</a>
     </nav>
 
     <section class="hero">
         <div class="hero-bg"></div>
-        
         <div class="main-card" data-aos="fade-up">
             <h1>Películas y series sin límites.</h1>
             <p class="tagline">La APK más completa con estrenos diarios en HD.</p>
             
-            <a href="TU_LINK_DE_MEDIAFIRE" class="btn-download">
+            <a href="TU_LINK_DE_DESCARGA" class="btn-download">
                 <i class="fab fa-android"></i> DESCARGAR APK GRATIS
             </a>
 
             <div class="stats-row">
-                <div class="stat-box">
-                    <i class="fas fa-download"></i>
-                    <span id="count">15,421+</span>
-                    <p>Descargas</p>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>SIN VIRUS</span>
-                    <p>Protección</p>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-star"></i>
-                    <span>4.9 / 5</span>
-                    <p>Valoración</p>
-                </div>
+                <div class="stat-box"><i class="fas fa-download"></i><span id="count">15,421+</span><p>Descargas</p></div>
+                <div class="stat-box"><i class="fas fa-shield-alt"></i><span>SIN VIRUS</span><p>Protección</p></div>
+                <div class="stat-box"><i class="fas fa-star"></i><span>4.9 / 5</span><p>Valoración</p></div>
             </div>
         </div>
     </section>
@@ -177,18 +171,12 @@
     </section>
 
     <footer>
-        <div class="social">
-            <a href="#"><i class="fab fa-telegram-plane"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p style="font-size:0.7rem; color:#444; margin-top:15px;">© 2026 Cinewick - Made with ❤️ for Movie Lovers</p>
+        <p style="font-size:0.7rem; color:#444;">© 2026 Cinewick - Made for Movie Lovers</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
-
         const CONFIG = {
             TMDB_KEY: '51800c8d9e13631a7ded6f17f363e7a5',
             BLOG_URL: 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderMovies&max-results=6'
@@ -214,7 +202,6 @@
                         if(movie.poster_path) imgUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
                     } catch(e) {}
                 }
-
                 if (!imgUrl && entry.media$thumbnail) imgUrl = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
 
                 if (imgUrl) {
