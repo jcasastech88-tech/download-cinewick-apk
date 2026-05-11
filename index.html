@@ -15,15 +15,12 @@
             --glass: rgba(0, 0, 0, 0.65);
         }
 
-        * { box-sizing: border-box; }
-
         body {
             margin: 0;
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--dark);
             color: white;
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
         /* Navbar */
@@ -46,7 +43,7 @@
 
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/76c5a455-c62c-46d4-8653-3924728113e3/web/AR-es-20260504-TRIFECTA-perspective_1ac5b690-1221-478e-bb49-c2e0abc5c2a9_large.jpg');
+            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/7502c389-42e1-452f-981d-cf2c2e6b22c0/604870f2-5369-4e08-9d9e-c85e25a2e6f4/ES-es-20230206-popsignuptwoweeks-perspective_alpha_website_large.jpg');
             background-size: cover; background-position: center;
             filter: brightness(0.3) blur(4px); z-index: 1;
         }
@@ -57,88 +54,75 @@
             background: var(--glass); backdrop-filter: blur(20px);
             padding: 50px 40px; border-radius: 24px; 
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
         }
 
-        h1 { font-size: clamp(2.2rem, 5vw, 4rem); margin: 0 0 15px 0; font-weight: 800; line-height: 1.1; }
-        .tagline { font-size: 1.2rem; color: #dcdcdc; margin-bottom: 30px; font-weight: 300; }
-
-        /* Botón y Seguridad */
-        .download-wrapper { position: relative; display: inline-block; margin-bottom: 40px; }
-        
         .btn-main {
             background: var(--primary); color: white; padding: 20px 45px;
             border-radius: 12px; text-decoration: none; font-weight: bold;
             font-size: 1.3rem; display: inline-flex; align-items: center; gap: 15px; 
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
-        }
-        
-        .btn-main:hover { transform: translateY(-5px); background: #f40a16; }
-
-        .security-badge {
-            position: absolute; top: -12px; right: -12px;
-            background: #2ecc71; color: white; padding: 6px 14px;
-            border-radius: 50px; font-size: 0.7rem; font-weight: 900;
-            display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            animation: bounce 2s infinite;
+            transition: 0.3s;
         }
 
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        /* Stats Grid */
         .stats-grid {
             display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;
+            gap: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; margin-top: 30px;
         }
-        .stat-item i { color: var(--primary); font-size: 1.3rem; margin-bottom: 8px; }
-        .stat-item span { display: block; font-size: 1.1rem; font-weight: 800; }
-        .stat-item p { font-size: 0.7rem; color: #999; margin: 0; letter-spacing: 1px; }
 
-        /* Tendencias Ranking Estilo Netflix */
+        /* --- SECCIÓN CONTENIDO RECIÉN AGREGADO (TOP 6) --- */
         .trending { padding: 80px 0; background: #000; }
-        .trending h2 { text-align: center; margin-bottom: 60px; font-weight: 300; font-size: 1.8rem; letter-spacing: 1px; }
+        .trending h2 { text-align: center; margin-bottom: 60px; font-weight: 300; font-size: 1.8rem; }
         
         .poster-container {
             width: 100%; overflow-x: auto; padding: 20px 5% 80px 12%;
-            scrollbar-width: none; -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .poster-container::-webkit-scrollbar { display: none; }
 
-        .poster-track { display: flex; gap: 55px; width: max-content; }
+        .poster-track { display: flex; gap: 60px; width: max-content; }
 
-        .poster-card {
-            position: relative; width: 190px; height: 280px;
-            flex-shrink: 0; transition: 0.4s ease;
+        .poster-link {
+            position: relative;
+            width: 190px;
+            height: 280px;
+            flex-shrink: 0;
+            text-decoration: none;
+            transition: 0.4s ease;
+            display: block;
         }
 
-        .poster-card img {
+        /* La imagen va detrás del número */
+        .poster-link img {
             width: 100%; height: 100%; object-fit: cover;
-            border-radius: 6px; position: relative; z-index: 2;
+            border-radius: 6px; 
+            position: relative; 
+            z-index: 1; 
         }
 
-        .poster-card::before {
+        /* El Número Gigante (AL FRENTE) */
+        .poster-link::before {
             content: attr(data-rank);
-            position: absolute; bottom: -30px; left: -65px;
-            font-size: 200px; font-weight: 900; z-index: 1;
-            color: #000; -webkit-text-stroke: 4px #444;
-            font-family: 'Arial Black', sans-serif; letter-spacing: -12px;
+            position: absolute; 
+            bottom: -35px; 
+            left: -75px;
+            font-size: 220px; 
+            font-weight: 900; 
+            z-index: 2; /* CAMBIO CLAVE: El número ahora está encima */
+            color: #000; 
+            -webkit-text-stroke: 3px #fff; /* Borde blanco para resaltar contra el poster */
+            font-family: 'Arial Black', sans-serif; 
+            letter-spacing: -12px;
             line-height: 1;
+            pointer-events: none; /* Permite que el click pase al link */
         }
 
-        .poster-card:hover { transform: scale(1.08); z-index: 10; }
-        .poster-card:hover::before { -webkit-text-stroke: 4px var(--primary); }
+        .poster-link:hover { transform: scale(1.08); z-index: 10; }
+        .poster-link:hover::before { -webkit-text-stroke: 3px var(--primary); color: rgba(0,0,0,0.8); }
 
-        /* Footer */
-        footer { padding: 50px 20px; text-align: center; border-top: 1px solid #1a1a1a; color: #555; }
-        .social-links { margin-bottom: 20px; }
-        .social-links a { color: #fff; margin: 0 12px; font-size: 1.4rem; transition: 0.3s; }
-        .social-links a:hover { color: var(--primary); }
+        footer { padding: 50px 20px; text-align: center; color: #555; }
 
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: 1fr; gap: 25px; }
-            .poster-card { width: 150px; height: 220px; margin-left: 30px; }
-            .poster-card::before { font-size: 150px; left: -50px; bottom: -15px; }
+            .poster-link { width: 150px; height: 220px; margin-left: 30px; }
+            .poster-link::before { font-size: 160px; left: -55px; }
         }
     </style>
 </head>
@@ -146,7 +130,7 @@
 
     <nav>
         <a href="#" class="nav-logo">CINEWICK</a>
-        <a href="https://cinewick-vip.blogspot.com/" style="color:white; text-decoration:none; font-size: 0.9rem; font-weight:bold;">WEB OFICIAL</a>
+        <a href="https://cinewick-vip.blogspot.com/" style="color:white; text-decoration:none; font-weight:bold;">WEB OFICIAL</a>
     </nav>
 
     <section class="hero">
@@ -154,33 +138,16 @@
         <div class="hero-content" data-aos="zoom-in">
             <div class="glass-card">
                 <h1>Películas y series sin límites.</h1>
-                <p class="tagline">La APK más rápida, estable y gratuita del mercado.</p>
+                <p style="margin-bottom:30px; color:#ccc;">La APK más completa con estrenos diarios en HD.</p>
                 
-                <div class="download-wrapper">
-                    <a href="https://www.mediafire.com/file/TU_LINK" class="btn-main">
-                        <i class="fab fa-android"></i> DESCARGAR APK GRATIS
-                    </a>
-                    <div class="security-badge">
-                        <i class="fas fa-check-circle"></i> SEGURO
-                    </div>
-                </div>
+                <a href="TU_LINK_DE_DESCARGA" class="btn-main">
+                    <i class="fab fa-android"></i> DESCARGAR APK GRATIS
+                </a>
 
                 <div class="stats-grid">
-                    <div class="stat-item">
-                        <i class="fas fa-download"></i>
-                        <span id="count">15,421+</span>
-                        <p>Descargas</p>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-shield-virus"></i>
-                        <span>SIN VIRUS</span>
-                        <p>Protección</p>
-                    </div>
-                    <div class="stat-item">
-                        <i class="fas fa-star"></i>
-                        <span>4.9 / 5</span>
-                        <p>Valoración</p>
-                    </div>
+                    <div class="stat-item"><i class="fas fa-download"></i><span id="count">15,421+</span><p>Descargas</p></div>
+                    <div class="stat-item"><i class="fas fa-shield-virus"></i><span>SIN VIRUS</span><p>Protección</p></div>
+                    <div class="stat-item"><i class="fas fa-star"></i><span>4.9 / 5</span><p>Valoración</p></div>
                 </div>
             </div>
         </div>
@@ -195,12 +162,7 @@
     </section>
 
     <footer>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-telegram"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-        </div>
-        <p>&copy; 2026 Cinewick App. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Cinewick App</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -209,7 +171,7 @@
 
         const CONFIG = {
             TMDB_KEY: '51800c8d9e13631a7ded6f17f363e7a5',
-            BLOG_URL: 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderMovies&max-results=10'
+            BLOG_URL: 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderMovies&max-results=6'
         };
 
         window.renderMovies = async function(data) {
@@ -218,9 +180,10 @@
             if (!entries) return;
             track.innerHTML = ''; 
 
-            for (let i = 0; i < entries.length && i < 10; i++) {
+            for (let i = 0; i < entries.length; i++) {
                 const entry = entries[i];
                 let imgUrl = "";
+                const postLink = entry.link.find(l => l.rel === 'alternate').href;
                 const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
                 const tmdbMatch = content.match(/(?:movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
 
@@ -239,24 +202,24 @@
                 }
 
                 if (imgUrl) {
-                    const card = document.createElement('div');
-                    card.className = 'poster-card';
+                    const card = document.createElement('a');
+                    card.href = postLink;
+                    card.className = 'poster-link';
                     card.setAttribute('data-rank', i + 1);
-                    card.innerHTML = `<img src="${imgUrl}" alt="Poster de ${entry.title.$t}">`;
+                    card.innerHTML = `<img src="${imgUrl}" alt="Poster">`;
                     track.appendChild(card);
                 }
             }
         };
 
-        // Contador realista
+        // Contador
         let downloads = 15421;
         setInterval(() => {
             downloads += Math.floor(Math.random() * 2);
-            const el = document.getElementById('count');
-            if(el) el.innerText = downloads.toLocaleString() + "+";
+            document.getElementById('count').innerText = downloads.toLocaleString() + "+";
         }, 6000);
 
-        // Iniciar carga de Blogger
+        // Iniciar carga
         (function() {
             const script = document.createElement('script');
             script.src = CONFIG.BLOG_URL;
