@@ -24,48 +24,51 @@
         }
 
         /* NAVBAR - Corrección definitiva */
-        nav {
-        position: fixed;
-        top: 0; 
-        width: 100%; 
-        padding: 25px 5%;
-        z-index: 99999; /* Elevación máxima para que sea clickeable siempre */
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-        pointer-events: none; /* Permite que el scroll pase a través de la barra si es necesario */
-    }
+nav {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    padding: 20px 0; /* Eliminamos el padding lateral aquí para controlarlo mejor en los hijos */
+    z-index: 99999; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+}
 
     .nav-logo, .nav-link {
         pointer-events: auto; /* Solo el logo y el link reaccionan al clic */
     }
 
-    .nav-logo { 
-        font-size: 1.6rem; 
-        font-weight: 900; 
-        color: #e50914; 
-        text-decoration: none; 
-    }
+.nav-logo { 
+    margin-left: 5%; /* Separación del borde izquierdo */
+    font-size: 1.6rem; 
+    font-weight: 900; 
+    color: #e50914; 
+    text-decoration: none; 
+}
 
-    .nav-link { 
-        color: #ffffff !important; 
-        text-decoration: none; 
-        font-size: 0.9rem; 
-        font-weight: 800; 
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        background: rgba(255, 255, 255, 0.1); /* Fondo sutil para que resalte del fondo */
-        padding: 8px 15px;
-        border-radius: 5px;
-        transition: 0.3s;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
+.nav-link { 
+    margin-right: 8%; /* Aumentamos el margen derecho para que no lo tape la scrollbar */
+    color: #ffffff !important; 
+    text-decoration: none; 
+    font-size: 0.85rem; 
+    font-weight: 800; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.15); 
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap; /* Evita que el texto se parta en dos líneas */
+    transition: 0.3s;
+}
 
-    .nav-link:hover {
-        background: rgba(229, 9, 20, 0.9); /* Rojo Cinewick al pasar el mouse */
-        border-color: #e50914;
-    }
+.nav-link:hover {
+    background: #e50914;
+    border-color: #e50914;
+}
 
         /* HERO Y CARD (Base visual mantenida) */
         .hero {
