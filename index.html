@@ -1,264 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinewick | Descarga la App Oficial</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #e50914;
-            --dark: #000000;
-            --glass: rgba(0, 0, 0, 0.7);
+window.renderMovies = async function(data) {
+    const track = document.getElementById('poster-track');
+    const entries = data.feed.entry;
+    if (!entries) return;
+
+    track.innerHTML = ''; 
+
+    // Solo tomamos los primeros 10 para el Top
+    for (let i = 0; i < entries.length && i < 10; i++) {
+        const entry = entries[i];
+        let imgUrl = "";
+        const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
+        const tmdbMatch = content.match(/(?:movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
+
+        if (tmdbMatch && tmdbMatch[1]) {
+            try {
+                const id = tmdbMatch[1];
+                const type = content.includes('tv/') ? 'tv' : 'movie';
+                const tmdbRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${CONFIG.TMDB_KEY}&language=es-ES`);
+                const tmdbData = await tmdbRes.json();
+                if(tmdbData.poster_path) imgUrl = `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`;
+            } catch(e) {}
         }
 
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: var(--dark);
-            color: white;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+        if (!imgUrl && entry.media$thumbnail) {
+            imgUrl = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
         }
 
-        /* Navbar Estilo Netflix */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 5%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        if (imgUrl) {
+            const card = document.createElement('div');
+            card.className = 'poster-card';
+            card.setAttribute('data-rank', i + 1); // Aquí se pone el número 1, 2, 3...
+            card.innerHTML = `<img src="${imgUrl}" alt="Poster">`;
+            track.appendChild(card);
         }
-
-        .nav-logo {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-            letter-spacing: -1px;
-        }
-
-        /* Hero Section */
-        .hero {
-            position: relative;
-            height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/7502c389-42e1-452f-981d-cf2c2e6b22c0/604870f2-5369-4e08-9d9e-c85e25a2e6f4/ES-es-20230206-popsignuptwoweeks-perspective_alpha_website_large.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.3) blur(2px);
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 850px;
-            padding: 20px;
-        }
-
-        .glass-card {
-            background: var(--glass);
-            padding: 60px 40px;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin: 0 0 15px 0; font-weight: 800; }
-        .tagline { font-size: 1.4rem; color: #e6e6e6; margin-bottom: 40px; }
-
-        /* Botón de Descarga */
-        .btn-download {
-            background: var(--primary);
-            color: white;
-            padding: 22px 50px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.5rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            transition: 0.3s;
-        }
-
-        .btn-download:hover { background: #b9090b; transform: scale(1.05); }
-
-        /* SECCIÓN TENDENCIAS (TOP 10 STYLE) */
-        .trending { padding: 60px 0; background: #000; }
-        .trending h2 { padding-left: 5%; margin-bottom: 30px; font-size: 1.8rem; font-weight: 500; }
-        
-        .poster-container {
-            width: 100%;
-            overflow-x: auto;
-            padding: 40px 5% 60px 5%;
-            scrollbar-width: none; /* Ocultar scroll en Firefox */
-        }
-        .poster-container::-webkit-scrollbar { display: none; } /* Ocultar scroll en Chrome */
-
-        .poster-track {
-            display: flex;
-            gap: 45px;
-            width: max-content;
-        }
-
-        .poster-card {
-            position: relative;
-            width: 200px;
-            height: 280px;
-            flex-shrink: 0;
-            margin-left: 40px; /* Espacio para el número */
-            transition: 0.4s ease;
-        }
-
-        /* Imagen del póster */
-        .poster-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 4px;
-            position: relative;
-            z-index: 2; /* Encima del número */
-        }
-
-        /* El Número Gigante */
-        .poster-card::before {
-            content: attr(data-rank);
-            position: absolute;
-            bottom: -35px;
-            left: -65px;
-            font-size: 220px;
-            font-weight: 900;
-            line-height: 1;
-            z-index: 1; /* Debajo de la imagen */
-            color: var(--dark);
-            -webkit-text-stroke: 4px #555;
-            font-family: 'Arial Black', sans-serif;
-            letter-spacing: -15px;
-        }
-
-        .poster-card:hover { transform: scale(1.1); z-index: 10; }
-        .poster-card:hover::before { -webkit-text-stroke: 4px var(--primary); }
-
-        /* Footer */
-        footer { padding: 60px 20px; text-align: center; color: #737373; border-top: 1px solid #222; }
-        .social-links a { color: #fff; margin: 0 15px; font-size: 1.5rem; text-decoration: none; }
-
-        @media (max-width: 768px) {
-            .poster-card { width: 150px; height: 210px; margin-left: 30px; }
-            .poster-card::before { font-size: 150px; left: -45px; bottom: -20px; }
-        }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <a href="#" class="nav-logo">CINEWICK</a>
-        <a href="https://cinewick-vip.blogspot.com/" style="color:white; text-decoration:none;">Web Oficial</a>
-    </nav>
-
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content" data-aos="fade-up">
-            <div class="glass-card">
-                <h1>Películas y series ilimitadas y mucho más.</h1>
-                <p class="tagline">Disfruta donde quieras. Sin anuncios molestos.</p>
-                <a href="https://www.mediafire.com/file/TU_LINK" class="btn-download">
-                    <i class="fab fa-android"></i> DESCARGAR APK
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="trending">
-        <h2>Tendencias: Los 10 más recientes</h2>
-        <div class="poster-container">
-            <div class="poster-track" id="poster-track">
-                <p>Cargando Top 10...</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-telegram"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-        </div>
-        <p style="margin-top:20px;">&copy; 2026 Cinewick App - Streaming de alta calidad</p>
-    </footer>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 1000, once: true });
-
-        const CONFIG = {
-            TMDB_KEY: '51800c8d9e13631a7ded6f17f363e7a5',
-            BLOG_URL: 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderMovies&max-results=10'
-        };
-
-        window.renderMovies = async function(data) {
-            const track = document.getElementById('poster-track');
-            const entries = data.feed.entry;
-            if (!entries) return;
-
-            track.innerHTML = ''; 
-
-            for (let i = 0; i < entries.length && i < 10; i++) {
-                const entry = entries[i];
-                let imgUrl = "";
-                const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
-                
-                // Buscador de IDs en el post
-                const tmdbMatch = content.match(/(?:movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
-
-                if (tmdbMatch && tmdbMatch[1]) {
-                    try {
-                        const id = tmdbMatch[1];
-                        const type = content.includes('tv/') ? 'tv' : 'movie';
-                        const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${CONFIG.TMDB_KEY}&language=es-ES`);
-                        const movie = await res.json();
-                        if(movie.poster_path) imgUrl = `https://image.tmdb.org/p/w500${movie.poster_path}`;
-                    } catch(e) {}
-                }
-
-                if (!imgUrl && entry.media$thumbnail) {
-                    imgUrl = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
-                }
-
-                if (imgUrl) {
-                    const card = document.createElement('div');
-                    card.className = 'poster-card';
-                    card.setAttribute('data-rank', i + 1); // El número del 1 al 10
-                    card.innerHTML = `<img src="${imgUrl}" alt="Poster">`;
-                    track.appendChild(card);
-                }
-            }
-        };
-
-        // Carga el feed como script para evitar CORS
-        (function() {
-            const script = document.createElement('script');
-            script.src = CONFIG.BLOG_URL;
-            document.body.appendChild(script);
-        })();
-    </script>
-</body>
-</html>
+    }
+    // Para este diseño de ranking, NO recomiendo duplicar el contenido 
+    // porque ver el número "1" dos veces confunde. 
+    // Es mejor que el track sea estático o con scroll manual suave.
+};
