@@ -10,7 +10,8 @@
     
     <style>
         :root {
-            --primary: #e50914;
+            /* Color verde/cian extraído de tu web principal */
+            --primary: #00e5b0; 
             --dark: #000000;
             --glass: rgba(15, 15, 15, 0.85);
         }
@@ -23,54 +24,51 @@
             overflow-x: hidden;
         }
 
-        /* NAVBAR - Corrección definitiva */
-nav {
-    position: fixed;
-    top: 0; 
-    left: 0;
-    width: 100%; 
-    padding: 20px 0; /* Eliminamos el padding lateral aquí para controlarlo mejor en los hijos */
-    z-index: 99999; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
-}
+        /* NAVBAR - Corrección definitiva de visibilidad */
+        nav {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%; 
+            padding: 20px 0;
+            z-index: 99999; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+        }
 
-    .nav-logo, .nav-link {
-        pointer-events: auto; /* Solo el logo y el link reaccionan al clic */
-    }
+        .nav-logo { 
+            margin-left: 5%;
+            font-size: 1.6rem; 
+            font-weight: 900; 
+            color: var(--primary); /* Logo ahora en verde */
+            text-decoration: none; 
+        }
 
-.nav-logo { 
-    margin-left: 5%; /* Separación del borde izquierdo */
-    font-size: 1.6rem; 
-    font-weight: 900; 
-    color: #e50914; 
-    text-decoration: none; 
-}
+        .nav-link { 
+            margin-right: 8%; /* Margen de seguridad para evitar cortes */
+            color: #ffffff !important; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.15); 
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            white-space: nowrap; /* Evita que el texto se rompa */
+            transition: 0.3s;
+        }
 
-.nav-link { 
-    margin-right: 8%; /* Aumentamos el margen derecho para que no lo tape la scrollbar */
-    color: #ffffff !important; 
-    text-decoration: none; 
-    font-size: 0.85rem; 
-    font-weight: 800; 
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: rgba(255, 255, 255, 0.15); 
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    white-space: nowrap; /* Evita que el texto se parta en dos líneas */
-    transition: 0.3s;
-}
+        .nav-link:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #000 !important;
+        }
 
-.nav-link:hover {
-    background: #e50914;
-    border-color: #e50914;
-}
-
-        /* HERO Y CARD (Base visual mantenida) */
+        /* HERO Y CARD */
         .hero {
             position: relative; height: 100vh;
             display: flex; align-items: center; justify-content: center;
@@ -89,26 +87,25 @@ nav {
             box-shadow: 0 25px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1);
         }
         .btn-download {
-            background: var(--primary); color: white; padding: 18px; width: 100%;
+            background: var(--primary); 
+            color: #000; /* Texto oscuro para contraste */
+            padding: 18px; width: 100%;
             border-radius: 12px; text-decoration: none; font-weight: bold;
             display: flex; align-items: center; justify-content: center; gap: 12px;
             transition: 0.3s; margin-bottom: 35px;
         }
+        .btn-download:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0, 229, 176, 0.4); }
+
         .stats-row {
             display: flex; justify-content: space-around;
             border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;
         }
 
-        /* SECCIÓN TENDENCIAS CON BOTONES */
+        /* SECCIÓN TENDENCIAS */
         .trending { padding: 80px 0; background: #000; position: relative; }
         .trending h2 { text-align: center; margin-bottom: 50px; font-weight: 300; }
         
-        .carousel-wrapper {
-            position: relative;
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
+        .carousel-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
 
         .poster-container {
             width: 100%; 
@@ -127,7 +124,6 @@ nav {
         }
         .poster-link img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; position: relative; z-index: 1; }
         
-        /* Números frontales mantenidos */
         .poster-link::before {
             content: attr(data-rank);
             position: absolute; bottom: -30px; left: -65px;
@@ -137,24 +133,14 @@ nav {
             line-height: 1; pointer-events: none;
         }
 
-        /* Botones de Navegación */
         .nav-btn {
-            position: absolute;
-            top: 40%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 20;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
-            transition: 0.3s;
+            position: absolute; top: 40%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.5); color: white; border: none;
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            z-index: 20; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; transition: 0.3s;
         }
-        .nav-btn:hover { background: var(--primary); }
+        .nav-btn:hover { background: var(--primary); color: #000; }
         .prev-btn { left: 2%; }
         .next-btn { right: 2%; }
 
@@ -164,8 +150,8 @@ nav {
 <body>
 
     <nav>
-    <a href="#" class="nav-logo">CINEWICK</a>
-    <a href="https://cinewick-vip.blogspot.com/" class="nav-link">Web Oficial</a>
+        <a href="#" class="nav-logo">CINEWICK</a>
+        <a href="https://cinewick-vip.blogspot.com/" class="nav-link">Web Oficial</a>
     </nav>
 
     <section class="hero">
@@ -178,42 +164,38 @@ nav {
                 <i class="fab fa-android"></i> DESCARGAR APK GRATIS
             </a>
 
-<div class="stats-row">
-    <div class="stat-box">
-        <i class="fas fa-download" style="color:var(--primary)"></i>
-        <span id="count">15,421+</span>
-        <p>Descargas</p>
-    </div>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <i class="fas fa-download" style="color:var(--primary)"></i>
+                    <span id="count">15,421+</span>
+                    <p>Descargas</p>
+                </div>
 
-    <a href="https://www.virustotal.com/gui/file/98af1ec699553b35e0340f752a022291458ab697d40bdf4e1b4d13e65fe7efc8/detection" 
-       target="_blank" 
-       class="stat-box" 
-       style="text-decoration: none; cursor: pointer;">
-        <i class="fas fa-shield-alt" style="color:#2ecc71"></i>
-        <span style="color: white; font-weight: 800;">SEGURO</span>
-        <p style="color: #2ecc71; font-weight: bold;">VIRUSTOTAL OK</p>
-    </a>
+                <a href="https://www.virustotal.com/gui/file/98af1ec699553b35e0340f752a022291458ab697d40bdf4e1b4d13e65fe7efc8/detection" 
+                   target="_blank" 
+                   class="stat-box" 
+                   style="text-decoration: none; cursor: pointer;">
+                    <i class="fas fa-shield-alt" style="color:var(--primary)"></i>
+                    <span style="color: white; font-weight: 800;">SEGURO</span>
+                    <p style="color: var(--primary); font-weight: bold;">VIRUSTOTAL OK</p>
+                </a>
 
-    <div class="stat-box">
-        <i class="fas fa-star" style="color:#f1c40f"></i>
-        <span>4.9 / 5</span>
-        <p>Valoración</p>
-    </div>
-</div>
+                <div class="stat-box">
+                    <i class="fas fa-star" style="color:#f1c40f"></i>
+                    <span>4.9 / 5</span>
+                    <p>Valoración</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <section class="trending">
         <h2>Contenido Recién Agregado</h2>
-        
         <div class="carousel-wrapper">
             <button class="nav-btn prev-btn" onclick="scrollCarousel(-300)"><i class="fas fa-chevron-left"></i></button>
-            
             <div class="poster-container" id="carousel">
-                <div id="poster-track" class="poster-track">
-                    </div>
+                <div id="poster-track" class="poster-track"></div>
             </div>
-
             <button class="nav-btn next-btn" onclick="scrollCarousel(300)"><i class="fas fa-chevron-right"></i></button>
         </div>
     </section>
@@ -225,7 +207,6 @@ nav {
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
-
         function scrollCarousel(distance) {
             document.getElementById('carousel').scrollBy({ left: distance, behavior: 'smooth' });
         }
