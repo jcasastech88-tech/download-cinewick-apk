@@ -23,108 +23,83 @@
             overflow-x: hidden;
         }
 
-        /* NAVBAR - Corrección de visibilidad */
+        /* NAVBAR - Corrección definitiva */
         nav {
             position: fixed;
             top: 0; width: 100%; padding: 25px 5%;
-            z-index: 2000; /* Prioridad máxima */
+            z-index: 9999;
             display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
         }
         .nav-logo { font-size: 1.6rem; font-weight: 900; color: var(--primary); text-decoration: none; }
         .nav-link { 
-            color: white; 
+            color: #ffffff !important; 
             text-decoration: none; 
             font-size: 0.85rem; 
-            font-weight: bold; 
+            font-weight: 800; 
             text-transform: uppercase;
             letter-spacing: 1px;
-            z-index: 2001;
+            display: block;
         }
 
-        /* HERO */
+        /* HERO Y CARD (Base visual mantenida) */
         .hero {
-            position: relative;
-            height: 100vh;
+            position: relative; height: 100vh;
             display: flex; align-items: center; justify-content: center;
         }
-
         .hero-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/7502c389-42e1-452f-981d-cf2c2e6b22c0/604870f2-5369-4e08-9d9e-c85e25a2e6f4/ES-es-20230206-popsignuptwoweeks-perspective_alpha_website_large.jpg');
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://assets.nflxext.com/ffe/siteui/vlv3/76c5a455-c62c-46d4-8653-3924728113e3/web/AR-es-20260504-TRIFECTA-perspective_1ac5b690-1221-478e-bb49-c2e0abc5c2a9_large.jpg');
             background-size: cover; background-position: center;
-            filter: brightness(0.3) blur(5px);
-            z-index: 1;
+            filter: brightness(0.3) blur(5px); z-index: 1;
         }
-
         .main-card {
-            position: relative;
-            z-index: 10;
-            background-color: var(--glass);
-            backdrop-filter: blur(10px);
-            padding: 50px 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 480px;
-            width: 90%;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
-            border: 1px solid rgba(255,255,255,0.1);
+            position: relative; z-index: 10;
+            background-color: var(--glass); backdrop-filter: blur(10px);
+            padding: 50px 40px; border-radius: 20px; text-align: center;
+            max-width: 480px; width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9); border: 1px solid rgba(255,255,255,0.1);
         }
-
-        h1 { font-size: 2.2rem; margin: 0 0 10px 0; font-weight: 800; }
-        .tagline { color: #ccc; margin-bottom: 35px; font-size: 1.1rem; }
-
         .btn-download {
-            background: var(--primary);
-            color: white;
-            padding: 18px;
-            width: 100%;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
+            background: var(--primary); color: white; padding: 18px; width: 100%;
+            border-radius: 12px; text-decoration: none; font-weight: bold;
             display: flex; align-items: center; justify-content: center; gap: 12px;
-            transition: 0.3s;
-            margin-bottom: 35px;
+            transition: 0.3s; margin-bottom: 35px;
         }
-
         .stats-row {
             display: flex; justify-content: space-around;
             border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;
         }
-        .stat-box i { color: var(--primary); font-size: 1rem; margin-bottom: 5px; display: block; }
-        .stat-box span { font-weight: 800; font-size: 1rem; display: block; }
-        .stat-box p { font-size: 0.7rem; color: #888; margin: 0; text-transform: uppercase; }
 
-        /* CARRUSEL - Corrección de desplazamiento */
-        .trending { padding: 80px 0; background: #000; overflow: hidden; }
+        /* SECCIÓN TENDENCIAS CON BOTONES */
+        .trending { padding: 80px 0; background: #000; position: relative; }
         .trending h2 { text-align: center; margin-bottom: 50px; font-weight: 300; }
         
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
         .poster-container {
             width: 100%; 
             overflow-x: auto; 
-            padding: 20px 0 80px 15%; /* Padding izquierdo para centrar inicio */
+            padding: 20px 0 80px 10%;
             scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
         .poster-container::-webkit-scrollbar { display: none; }
 
-        .poster-track { 
-            display: flex; 
-            gap: 70px; 
-            width: max-content; 
-            padding-right: 15%; /* ESPACIO FINAL para poder ver el 6to poster */
-        }
+        .poster-track { display: flex; gap: 75px; width: max-content; padding-right: 15%; }
 
         .poster-link {
             position: relative; width: 180px; height: 260px;
             flex-shrink: 0; display: block; transition: 0.4s;
         }
-        .poster-link img {
-            width: 100%; height: 100%; object-fit: cover;
-            border-radius: 6px; position: relative; z-index: 1;
-        }
-
+        .poster-link img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; position: relative; z-index: 1; }
+        
+        /* Números frontales mantenidos */
         .poster-link::before {
             content: attr(data-rank);
             position: absolute; bottom: -30px; left: -65px;
@@ -134,7 +109,28 @@
             line-height: 1; pointer-events: none;
         }
 
-        footer { padding: 40px; text-align: center; background: #000; border-top: 1px solid #111; }
+        /* Botones de Navegación */
+        .nav-btn {
+            position: absolute;
+            top: 40%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 20;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { background: var(--primary); }
+        .prev-btn { left: 2%; }
+        .next-btn { right: 2%; }
+
+        footer { padding: 40px; text-align: center; border-top: 1px solid #111; }
     </style>
 </head>
 <body>
@@ -148,35 +144,47 @@
         <div class="hero-bg"></div>
         <div class="main-card" data-aos="fade-up">
             <h1>Películas y series sin límites.</h1>
-            <p class="tagline">La APK más completa con estrenos diarios en HD.</p>
+            <p style="color:#ccc; margin-bottom:35px;">La APK más completa con estrenos diarios en HD.</p>
             
-            <a href="TU_LINK_DE_DESCARGA" class="btn-download">
+            <a href="TU_LINK_AQUI" class="btn-download">
                 <i class="fab fa-android"></i> DESCARGAR APK GRATIS
             </a>
 
             <div class="stats-row">
-                <div class="stat-box"><i class="fas fa-download"></i><span id="count">15,421+</span><p>Descargas</p></div>
-                <div class="stat-box"><i class="fas fa-shield-alt"></i><span>SIN VIRUS</span><p>Protección</p></div>
-                <div class="stat-box"><i class="fas fa-star"></i><span>4.9 / 5</span><p>Valoración</p></div>
+                <div class="stat-box"><i class="fas fa-download" style="color:var(--primary)"></i><span>15,421+</span><p>Descargas</p></div>
+                <div class="stat-box"><i class="fas fa-shield-alt" style="color:#2ecc71"></i><span>SEGURO</span><p>Protección</p></div>
+                <div class="stat-box"><i class="fas fa-star" style="color:#f1c40f"></i><span>4.9 / 5</span><p>Rating</p></div>
             </div>
         </div>
     </section>
 
     <section class="trending">
         <h2>Contenido Recién Agregado</h2>
-        <div class="poster-container">
-            <div id="poster-track" class="poster-track">
-                </div>
+        
+        <div class="carousel-wrapper">
+            <button class="nav-btn prev-btn" onclick="scrollCarousel(-300)"><i class="fas fa-chevron-left"></i></button>
+            
+            <div class="poster-container" id="carousel">
+                <div id="poster-track" class="poster-track">
+                    </div>
+            </div>
+
+            <button class="nav-btn next-btn" onclick="scrollCarousel(300)"><i class="fas fa-chevron-right"></i></button>
         </div>
     </section>
 
     <footer>
-        <p style="font-size:0.7rem; color:#444;">© 2026 Cinewick - Made for Movie Lovers</p>
+        <p style="font-size:0.7rem; color:#444;">© 2026 Cinewick App</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init();
+
+        function scrollCarousel(distance) {
+            document.getElementById('carousel').scrollBy({ left: distance, behavior: 'smooth' });
+        }
+
         const CONFIG = {
             TMDB_KEY: '51800c8d9e13631a7ded6f17f363e7a5',
             BLOG_URL: 'https://cinewick-vip.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderMovies&max-results=6'
