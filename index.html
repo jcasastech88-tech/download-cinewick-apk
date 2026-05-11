@@ -110,10 +110,65 @@
 
         .device-icons i:hover { opacity: 1; color: var(--primary); transition: 0.3s; }
 
+        #poster-track {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    animation: scrollCinema 30s linear infinite;
+    width: max-content;
+}
+
+@keyframes scrollCinema {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Se mueve la mitad porque duplicamos el contenido */
+}
+
+.poster-card {
+    width: 180px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #1a1a1a;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.poster-card img {
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    display: block;
+}
+
+.poster-info {
+    padding: 8px;
+    text-align: center;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+}
+
+.poster-info small {
+    color: var(--primary);
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
     </style>
 </head>
 <body>
 
+    <div class="status-badge" style="margin-bottom: 15px; font-size: 0.8rem; color: #2ecc71;">
+    <i class="fas fa-circle" style="animation: pulse 1.5s infinite;"></i> 
+    Servidores Online - v1.0.2 Actualizada hoy
+</div>
+
+<style>
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+</style>
+    
     <nav>
         <div style="font-weight: bold; font-size: 1.5rem; color: var(--primary)">CINEWICK</div>
         <a href="#download" class="btn-main" style="padding: 10px 20px; font-size: 0.9rem;">Descargar Ahora</a>
@@ -245,16 +300,70 @@
         <p style="font-size: 0.7rem;">Cinewick no aloja ningún video en sus servidores, solo comparte enlaces encontrados en la web.</p>
     </footer>
     <!-- Scripts de animación -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true });
+const CONFIG = {
+    TMDB_KEY: '51800c8d9e13631a7ded6f17f363e7a5',
+    BLOG_URL: 'https://cinewick-vip.blogspot.com',
+    LIMIT: 10
+};
 
-        // Un pequeño truco para que el contador parezca real
-        let count = 15400;
-        setInterval(() => {
-            count += Math.floor(Math.random() * 3);
-            document.getElementById('count').innerText = count.toLocaleString() + "+";
-        }, 5000);
-    </script>
+async function fetchCinewickPosts() {
+    const posterTrack = document.getElementById('poster-track');
+    // Usamos el feed RSS de Blogger
+    const feedUrl = `${CONFIG.BLOG_URL}/feeds/posts/default?alt=json&max-results=${CONFIG.LIMIT}`;
+
+    try {
+        const response = await fetch(feedUrl);
+        const data = await response.json();
+        const entries = data.feed.entry;
+
+        posterTrack.innerHTML = ''; // Limpiar cargando
+
+        for (let entry of entries) {
+            // Buscamos el ID de TMDB. 
+            // 1. Intentamos buscarlo en el contenido del post (frecuente en plantillas de películas)
+            const content = entry.content ? entry.content.$t : entry.summary.$t;
+            const tmdbMatch = content.match(/tmdb\.org\/(movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
+            
+            // Si no hay ID de TMDB, usamos la imagen miniatura de Blogger como respaldo
+            let posterImg = "";
+            let title = entry.title.$t;
+
+            if (tmdbMatch && tmdbMatch[2]) {
+                const type = tmdbMatch[1] || 'movie';
+                const id = tmdbMatch[2];
+                const tmdbRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${CONFIG.TMDB_KEY}&language=es-ES`);
+                const tmdbData = await tmdbRes.json();
+                posterImg = `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`;
+            } else if (entry.media$thumbnail) {
+                // Si no hay TMDB ID, usamos la miniatura de Blogger en alta calidad
+                posterImg = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
+            }
+
+            if (posterImg) {
+                const card = document.createElement('div');
+                card.className = 'poster-card';
+                card.innerHTML = `
+                    <img src="${posterImg}" alt="${title}" onerror="this.src='https://via.placeholder.com/180x270?text=Cinewick'">
+                    <div class="poster-info">
+                        <small>Nuevo</small>
+                    </div>
+                `;
+                posterTrack.appendChild(card);
+            }
+        }
+
+        // Clonamos los elementos para que el scroll parezca infinito
+        const clones = posterTrack.innerHTML;
+        posterTrack.innerHTML += clones;
+
+    } catch (error) {
+        console.error("Error cargando feed de Blogger:", error);
+        posterTrack.innerHTML = "<p>Actualizando cartelera...</p>";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchCinewickPosts);
+</script>
 </body>
 </html>
