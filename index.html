@@ -290,40 +290,55 @@
             return;
         }
 
-        track.innerHTML = ''; // Limpiamos el texto de carga
+        track.innerHTML = ''; 
 
         for (let entry of entries) {
             let imgUrl = "";
             let title = entry.title.$t;
             
-            // 1. Intentamos obtener la imagen de TMDB buscando el ID en el contenido
+            // Extraer el contenido del post
             const content = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : "");
-            const tmdbMatch = content.match(/tmdb\.org\/(movie|tv)\/(\d+)/) || content.match(/id=(\d+)/);
+            
+            // BUSCADOR DE ID DE TMDB (Prioridad 1)
+            // Busca patrones como movie/123, tv/123 o id=123
+            const tmdbMatch = content.match(/(?:movie|tv)\/(\d+)/) || content.match(/id=(\d+)/) || content.match(/tmdb_id["']>(\d+)/);
 
-            if (tmdbMatch && tmdbMatch[2]) {
+            if (tmdbMatch && tmdbMatch[1]) {
                 try {
-                    const type = tmdbMatch[1] || 'movie';
-                    const id = tmdbMatch[2];
+                    // Si el match fue con movie/tv, el ID está en el grupo 1 o 2. Ajustamos:
+                    const id = tmdbMatch[1].length > tmdbMatch[0].length ? tmdbMatch[0].split('/').pop() : tmdbMatch[1];
+                    
+                    // IMPORTANTE: Aquí asumimos que son películas por defecto. 
+                    // Si tienes series, el regex ya detecta si dice 'tv' o 'movie'
+                    const type = content.includes('tv/') ? 'tv' : 'movie';
+                    
                     const tmdbRes = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${CONFIG.TMDB_KEY}&language=es-ES`);
                     const tmdbData = await tmdbRes.json();
-                    if(tmdbData.poster_path) imgUrl = `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`;
-                } catch(e) { console.error("Error TMDB", e); }
+                    
+                    if(tmdbData.poster_path) {
+                        imgUrl = `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`;
+                    }
+                } catch(e) { console.error("Error obteniendo póster de TMDB", e); }
             }
 
-            // 2. Si lo anterior falla, usamos la miniatura de Blogger
+            // RESPALDO (Prioridad 2): Si no hay TMDB, intentamos buscar una imagen que NO sea de Youtube
             if (!imgUrl && entry.media$thumbnail) {
+                // Solo usamos la miniatura de Blogger si no pudimos conectar con TMDB
                 imgUrl = entry.media$thumbnail.url.replace('/s72-c/', '/w500/');
             }
 
             if (imgUrl) {
                 const card = document.createElement('div');
                 card.className = 'poster-card';
-                card.innerHTML = `<img src="${imgUrl}" alt="${title}" title="${title}">`;
+                card.innerHTML = `
+                    <img src="${imgUrl}" alt="${title}" title="${title}">
+                    <div class="poster-info"><small>HD</small></div>
+                `;
                 track.appendChild(card);
             }
         }
 
-        // Duplicar para el efecto de scroll infinito
+        // Clonar para el efecto infinito
         if (track.children.length > 0) {
             track.innerHTML += track.innerHTML;
         }
